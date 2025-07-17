@@ -12,13 +12,21 @@ int main(int argc, char* argv[]) {
     for(int i=0; i<argc-1; i++){
         fp[i] = fopen(argv[i+1], "rb");
         if(fp[i] == NULL){
-            printf("error");
+            printf("null error");
             return -1;
         }
-
+        fseek(fp[i], 0, SEEK_END);
+        uint32_t size = ftell(fp[i]);
+        if (size != 4) {
+            printf("size error");
+            return -1;
+        }
+        fseek(fp[i], 0, SEEK_SET);
+        
         tmp[i] = (uint32_t*)malloc(sizeof(uint32_t));
         if(tmp[i] == NULL){
             printf("malloc error");
+            return -1;
         }
         fread(tmp[i], sizeof(uint32_t), 4, fp[i]);
         o[i] = ntohl(*tmp[i]);
